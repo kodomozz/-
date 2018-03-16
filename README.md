@@ -205,3 +205,51 @@ xss：跨站点攻击。xss攻击的主要目的是想办法获取目标攻击�
 
 csrf：跨站点伪装请求。csrf攻击的主要目的是让用户在不知情的情况下攻击自己已登录的一个系统，类似于钓鱼。如用户当前已经登陆了邮箱或bbs，同时用户又在使用另外一个，已经被你控制的网站，我们姑且叫它钓鱼网站。这个网站上面可能因为某个图片吸引你，你去点击一下，此时可能就会触发一个js的点击事件，构造一个bbs发帖的请求，去往你的bbs发帖，由于当前你的浏览器状态已经是登陆状态，所以session登陆cookie信息都会跟正常的请求一样，纯天然的利用当前的登陆状态，让用户在不知情的情况下，帮你发帖或干其他事情。预防措施，请求加入随机数，让钓鱼网站无法正常伪造请求。
 ```
+
+### hasOwnPropertyNames, for in, Object.keys(), hasOwnProperty, propertyIsEnumerable 区别？
+```
+    Object.hasOwnPropertyNames：检查自身的包括可枚举，不可枚举， 不包括symble属性(只是属性，不包括方法)
+    for in： 所有的包括可枚举和不可枚举，原型上的方法和属性都会遍历
+    Ojbect.keys()：自身可枚举的属性
+    obj.hasOwnProperty(): 检查是否是自身的属性，包括可枚举,不可枚举的，(只是属性，不包括方法)
+    obj.propertyIsEnumerable()是用来检测属性是否属于某个对象的,如果检测到了,返回true,否则返回false. 
+    - 这个属性必须属于实例的,并且不属于原型. 
+    - 这个属性必须是可枚举的,也就是自定义的属性,可以通过for..in循环出来的. 
+```
+
+### 双向数据绑定demo
+
+```
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<input type="text" id="demo">
+<p id="display"></p>
+<script>
+    var obj={};
+    var bind=[];
+    //触发obj对象set和get方法的时候，趁机来输出或修改bind数组的内容
+    Object.defineProperty(obj,'s',{
+        set:function(val){
+            bind['s']=val;
+        },
+        get:function(){
+            return bind['s'];
+        }
+    })
+    var demo=document.querySelector('#demo');
+    var display=document.querySelector('#display');
+    //#demo的value值与bind['s']绑定，#display的innerHTML也与bind['s']绑定。
+    demo.onkeyup=function(){
+        obj['s']=demo.value;//触发了obj的set方法，等于#demo的value值赋值给bind['s']。
+        display.innerHTML=bind['s'];
+    }
+
+</script>
+</body>
+</html>
+```
